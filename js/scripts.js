@@ -17,6 +17,7 @@ stations.forEach(function (stationRecord) {
 
     // create a popup to attach to the marker
     const popup = new mapboxgl.Popup({
+        closeButton: false, //removed the "x" from the popups as it crowded the small space
         offset: 24,
         anchor: 'bottom'
     // display the text in the popup
