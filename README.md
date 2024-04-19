@@ -1,2 +1,2 @@
 # Advanced-GIS-Assignment3
-First foray into using Mapbox
+Creating a clickable map of the stations of the Staten Island Railway leveraging Mapbox. 

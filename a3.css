@@ -57,6 +57,11 @@ nav {
     flex-grow: 1;
 }
 
+.mapboxgl-marker {
+    width: 25px;
+    height: 25px;
+}
+
 .title {
     font-weight: 600;
 }
