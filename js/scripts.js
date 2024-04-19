@@ -17,7 +17,9 @@ stations.forEach(function (stationRecord) {
 
     // create a popup to attach to the marker
     const popup = new mapboxgl.Popup({
-        closeButton: false, //removed the "x" from the popups as it crowded the small space
+        // removed the "x" from the popups as it crowded the small space
+        // https://stackoverflow.com/questions/66254088/how-to-remove-the-x-close-symbol-from-mapbox-pop-up
+        closeButton: false, 
         offset: 24,
         anchor: 'bottom'
     // display the text in the popup
