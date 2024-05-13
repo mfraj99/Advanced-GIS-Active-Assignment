@@ -58,9 +58,9 @@ nav {
 }
 
 .mapboxgl-marker {
+    background-size: contain;
     width: 25px;
     height: 25px;
-    scale: 0.65;
     color: "#4287f5";
 }
 
