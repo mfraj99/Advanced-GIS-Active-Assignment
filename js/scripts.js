@@ -4,7 +4,7 @@ mapboxgl.accessToken = "pk.eyJ1IjoibWljaGFlbGZyYWptYW4xIiwiYSI6ImNsdXZzaTNiNjA2e
 // generate map and have it centered to display Staten Island
 const map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v12',
+    style: 'mapbox://styles/mapbox/light-v11',
     center: [-74.153265,40.577327],
     zoom: 11
 });
@@ -13,6 +13,25 @@ const map = new mapboxgl.Map({
 map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', () => {
+
+    //import geojson of the haze mask around island
+    map.addSource('island-outline', {
+        type: 'geojson',
+        data: invertedstatenoutline
+    });
+
+    //generate layer for the haze mask around island
+    map.addLayer({
+        'id': 'island-haze',
+        'type': 'fill',
+        'source': 'island-outline',
+        'layout' : {},
+        'paint': {
+            'fill-opacity': 0.5,
+            'fill-color': '#4d4949',
+        }
+    });
+
     //import geojson of the railline
     map.addSource('railline', {
         type: 'geojson',
@@ -30,6 +49,7 @@ map.on('load', () => {
             'line-color': 'blue',
         }
     });
+
 });
 
 // loop over the station array to make a marker for each record
