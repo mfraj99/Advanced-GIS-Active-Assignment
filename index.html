@@ -8,20 +8,24 @@ https://github.com/chriswhong/responsive-web-map-layout/tree/main -->
     <meta charset="utf-8">
     <title>Staten Island Railway Stations</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="ccs/styles.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 </head>
 
 <body>
     <div id="main-container">
         <nav>
+            <!-- title bar at top -->
             <div class="title">The Staten Island Railway</div>
+            <!-- link to the source code in the top right -->
             <div class="nav-links">
                 <a class="nav-link" href="https://github.com/mfraj99/Advanced-GIS-Assignment3" target="_blank"
                     rel="noopener noreferrer">Source Code</a>
             </div>
 
         </nav>
+
+        <!-- large sidebar for text description and buttons -->
         <div id="content-container">
             <div id="sidebar">
                 <h2>Click on the blue pins to see the station name. Click anywhere on the map to close the popup.</h2>
@@ -41,9 +45,14 @@ https://github.com/chriswhong/responsive-web-map-layout/tree/main -->
         </div>
     </div>
 
+    <!-- mapbox import -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.0/mapbox-gl.js"></script>
+    <!-- jquery import -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- json and geojson imports -->
     <script src="js/sir-stations.js"></script>
+    <script src="js/sir-route.js"></script>
+    <!-- main script file import -->
     <script src="js/scripts.js"></script>
 
 </body>

@@ -12,6 +12,26 @@ const map = new mapboxgl.Map({
 // Based on Chris Wong's pizza map example
 map.addControl(new mapboxgl.NavigationControl());
 
+map.on('load', () => {
+    //import geojson of the railline
+    map.addSource('railline', {
+        type: 'geojson',
+        data: sirroute
+    });
+
+    //generate layer for the railline
+    map.addLayer({
+        'id': 'railway-route',
+        'type': 'line',
+        'source': 'railline',
+        'layout' : {},
+        'paint': {
+            'line-width': 8,
+            'line-color': 'blue',
+        }
+    });
+});
+
 // loop over the station array to make a marker for each record
 stations.forEach(function (stationRecord) {
 
