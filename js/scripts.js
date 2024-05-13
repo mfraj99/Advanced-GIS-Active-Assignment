@@ -9,7 +9,7 @@ const map = new mapboxgl.Map({
     zoom: 11
 });
 
-// Based on Chris Wong's pizza map example
+// Based on Chris Whong's pizza map example
 map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', () => {
@@ -67,11 +67,28 @@ stations.forEach(function (stationRecord) {
         `${stationRecord.StopName}`
     );
 
+    // placing an image depending on if the station is ADA compliant
+    let imageUrl;
+      // Define image URL based on attributes
+      switch (stationRecord.ADA) {
+        // is ADA accessible
+        case 1:
+          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Wheelchair_accessible_icon.svg/768px-Wheelchair_accessible_icon.svg.png';
+          break;
+
+        default:
+          imageUrl = 'https://cdn-icons-png.flaticon.com/512/565/565410.png'; // Default image
+      }
+
+    // creating a div to contain the image
+    let markerElement = document.createElement('div');
+    markerElement.className = 'custom-marker';
+    markerElement.style.backgroundImage = `url(${imageUrl})`;
+    markerElement.style.width = '30px';
+    markerElement.style.height = '30px';
+
     // create a marker, set the coordinates, add the popup, add it to the map
-    new mapboxgl.Marker({
-        scale: 0.65,
-        color: "#4287f5"
-    })
+    new mapboxgl.Marker(markerElement)
         .setLngLat([stationRecord.GTFSLongitude, stationRecord.GTFSLatitude])
         .setPopup(popup)
         .addTo(map);
