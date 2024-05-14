@@ -32,6 +32,31 @@ map.on('load', () => {
         }
     });
 
+    //import geojson for chloropleth of staten island demogrphics by census block
+    map.addSource('census-blocks', {
+        type: 'geojson',
+        data: sicensusblocks
+    });
+
+    //generate layer for chloropleth of staten island demogrphics by census block
+    map.addLayer({
+        'id': 'population-density',
+        'type': 'fill',
+        'source': 'census-blocks',
+        'layout' : {},
+        // the fill of each block is continously scaled for density from the min to max value observed
+        'paint': {
+            'fill-color': 'red',
+            'fill-opacity': [
+                'interpolate',
+                ['linear'],
+                ['get', 'DENSITY'],
+                0,0,
+                122471,1
+            ]
+        }
+    });
+
     //import geojson of the railline
     map.addSource('railline', {
         type: 'geojson',
