@@ -57,6 +57,38 @@ map.on('load', () => {
         }
     });
 
+    // used chatgpt and discussed with Luke Buttenwieser for how feature clicking can be achieved
+
+    // interactivity for population density map, clicking on a census block shows population and density numbers
+    // Add click event to show popup containing 
+    map.on('click', 'population-density', (e) => {
+        // get feature that is clicked on
+        var features = map.queryRenderedFeatures(e.point, {
+            layers: ['population-density']
+        });
+    
+        // check that a feature was clicked, if no feature than exit
+        if (!features.length) {
+            return;
+        }
+    
+        // extract geojson properties
+        var feature = features[0];
+        var properties = feature.properties;
+
+        // build popup message
+        var popupContent = '<h3>' + properties.NAME20 + '</h3>' +
+                           '<p>Population: ' + properties.POP20 + '</p>' +
+                           '<p>Density: ' + properties.DENSITY + '</p>';
+
+        // display popup messages
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(popupContent)
+            .addTo(map);
+
+    });
+
     //import geojson of the railline
     map.addSource('railline', {
         type: 'geojson',
@@ -73,6 +105,17 @@ map.on('load', () => {
             'line-width': 8,
             'line-color': 'blue',
         }
+    });
+
+    // Setting cursor depending on layer
+    // Change cursor to pointer when hovering over a polygon in density layer
+    map.on('mouseenter', 'population-density', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change cursor back to default when entering the haze layer
+    map.on('mouseenter', 'island-haze', () => {
+        map.getCanvas().style.cursor = '';
     });
 
 });
@@ -93,24 +136,24 @@ stations.forEach(function (stationRecord) {
     );
 
     // placing an image depending on if the station is ADA compliant
-    let imageUrl;
-      // Define image URL based on attributes
-      switch (stationRecord.ADA) {
-        // is ADA accessible
-        case 1:
-          imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Wheelchair_accessible_icon.svg/768px-Wheelchair_accessible_icon.svg.png';
-          break;
+    let imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/NYCS-bull-trans-SIR-Std.svg/1024px-NYCS-bull-trans-SIR-Std.svg.png';
+    // Define image URL based on attributes
+    // switch (stationRecord.ADA) {
+    // // is ADA accessible
+    // case 1:
+    //     imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Wheelchair_accessible_icon.svg/768px-Wheelchair_accessible_icon.svg.png';
+    //     break;
 
-        default:
-          imageUrl = 'https://cdn-icons-png.flaticon.com/512/565/565410.png'; // Default image
-      }
+    // default:
+    //     imageUrl = 'https://cdn-icons-png.flaticon.com/512/565/565410.png'; // Default image
+    // }
 
     // creating a div to contain the image
     let markerElement = document.createElement('div');
     markerElement.className = 'custom-marker';
     markerElement.style.backgroundImage = `url(${imageUrl})`;
-    markerElement.style.width = '30px';
-    markerElement.style.height = '30px';
+    markerElement.style.width = '25px';
+    markerElement.style.height = '25px';
 
     // create a marker, set the coordinates, add the popup, add it to the map
     new mapboxgl.Marker(markerElement)
