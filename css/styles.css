@@ -66,6 +66,7 @@ nav {
 
 .title {
     font-weight: 600;
+    font-size: larger;
 }
 
 @media only screen and (max-width: 800px) {

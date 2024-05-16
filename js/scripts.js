@@ -79,10 +79,10 @@ map.on('load', () => {
         // build popup message
         var popupContent = '<h3>' + properties.NAME20 + '</h3>' +
                            '<p>Population: ' + properties.POP20 + '</p>' +
-                           '<p>Density: ' + properties.DENSITY + '</p>';
+                           '<p>Density: ' + properties.DENSITY + ' pop/sqr m</p>';
 
         // display popup messages
-        new mapboxgl.Popup()
+        new mapboxgl.Popup({ closeButton: false })
             .setLngLat(e.lngLat)
             .setHTML(popupContent)
             .addTo(map);
@@ -128,8 +128,8 @@ stations.forEach(function (stationRecord) {
         // removed the "x" from the popups as it crowded the small space
         // https://stackoverflow.com/questions/66254088/how-to-remove-the-x-close-symbol-from-mapbox-pop-up
         closeButton: false, 
-        offset: 24,
-        anchor: 'bottom'
+        offset: -5,
+        anchor: 'top'
     // display the text in the popup
     }).setText(
         `${stationRecord.StopName}`
