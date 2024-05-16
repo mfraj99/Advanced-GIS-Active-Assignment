@@ -47,6 +47,10 @@ https://github.com/chriswhong/responsive-web-map-layout/tree/main -->
                 <p>-Being able to click on the census blocks to see more information</p>
                 <p>-Deactivated historic train routes and possibly bus routes (maybe with an image slider for before and
                     after)</p>
+                
+                <!-- buttons for advancing the story and restarting once done, reset is diabled at start -->
+                <button id="reset" onclick="resetMap()" disabled="disabled">Back to the Start</button>
+                <button id="main-toggle" onclick="toggleLayer()">Continue -></button>
             </div>
             <div id="map"></div>
         </div>

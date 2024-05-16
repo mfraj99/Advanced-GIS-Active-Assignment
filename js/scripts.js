@@ -9,19 +9,11 @@ const map = new mapboxgl.Map({
     zoom: 11
 });
 
-// Based on Chris Whong's pizza map example
-map.addControl(new mapboxgl.NavigationControl());
-
-map.on('load', () => {
-
-    //import geojson of the haze mask around island
-    map.addSource('island-outline', {
-        type: 'geojson',
-        data: invertedstatenoutline
-    });
-
-    //generate layer for the haze mask around island
-    map.addLayer({
+// hazy outline layers
+var backdropHazeLayers = [
+    
+    // initial haze around the whole island
+    {
         'id': 'island-haze',
         'type': 'fill',
         'source': 'island-outline',
@@ -29,17 +21,16 @@ map.on('load', () => {
         'paint': {
             'fill-opacity': 0.5,
             'fill-color': '#4d4949',
-        }
-    });
+        },
+        
+    }
+]
 
-    //import geojson for chloropleth of staten island demogrphics by census block
-    map.addSource('census-blocks', {
-        type: 'geojson',
-        data: sicensusblocks
-    });
+// all layers for polygons and lines
+var contentLayer = [
 
-    //generate layer for chloropleth of staten island demogrphics by census block
-    map.addLayer({
+    // layer for census block population density chloropleth
+    {
         'id': 'population-density',
         'type': 'fill',
         'source': 'census-blocks',
@@ -55,6 +46,28 @@ map.on('load', () => {
                 122471,1
             ]
         }
+    }
+
+]
+
+// Based on Chris Whong's pizza map example
+map.addControl(new mapboxgl.NavigationControl());
+
+map.on('load', () => {
+
+    //import geojson of the haze mask around island
+    map.addSource('island-outline', {
+        type: 'geojson',
+        data: invertedstatenoutline
+    });
+
+    // load the initial haze outline on startup
+    map.addLayer(backdropHazeLayers[0]);
+
+    //import geojson for chloropleth of staten island demogrphics by census block
+    map.addSource('census-blocks', {
+        type: 'geojson',
+        data: sicensusblocks
     });
 
     // used chatgpt and discussed with Luke Buttenwieser for how feature clicking can be achieved
@@ -135,18 +148,8 @@ stations.forEach(function (stationRecord) {
         `${stationRecord.StopName}`
     );
 
-    // placing an image depending on if the station is ADA compliant
+    // using the SIR logo in place of the default mapbox marker
     let imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/NYCS-bull-trans-SIR-Std.svg/1024px-NYCS-bull-trans-SIR-Std.svg.png';
-    // Define image URL based on attributes
-    // switch (stationRecord.ADA) {
-    // // is ADA accessible
-    // case 1:
-    //     imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Wheelchair_accessible_icon.svg/768px-Wheelchair_accessible_icon.svg.png';
-    //     break;
-
-    // default:
-    //     imageUrl = 'https://cdn-icons-png.flaticon.com/512/565/565410.png'; // Default image
-    // }
 
     // creating a div to contain the image
     let markerElement = document.createElement('div');
@@ -161,3 +164,52 @@ stations.forEach(function (stationRecord) {
         .setPopup(popup)
         .addTo(map);
 })
+
+// pressing the button to advance the story
+var currentLayerIndex = 0;
+
+function toggleLayer() {
+    // incrementing the layer counting, there are 3 layers to the story total
+    if (currentLayerIndex < 4){
+        currentLayerIndex += 1;
+    }
+
+    // layer one draws the populaton density map alongside the sir routes and stations
+    if (currentLayerIndex === 1){
+        map.addLayer(contentLayer[0]);
+    }
+    // layer two shows the proposed staten island brt
+    else if (currentLayerIndex === 2){
+
+    }
+    // layer three shows my proposed outerbridge spur
+    else if (currentLayerIndex === 3){
+
+        // disable the continue button once story reaches its conclusion
+        var mainButton = document.getElementById('main-toggle');
+        mainButton.disabled = true;
+        mainButton.style.opacity = 0.5;
+        
+        // enable the reset button
+        var resButton = document.getElementById('reset');
+        resButton.disabled = false;
+        resButton.style.opacity = 1;
+    }
+
+}
+
+// set the map back to the starting state
+function resetMap() {
+    currentLayerIndex = 0;
+    map.removeLayer(contentLayer[0].id);
+
+    // enable the continue button once story reaches its conclusion
+    var mainButton = document.getElementById('main-toggle');
+    mainButton.disabled = false;
+    mainButton.style.opacity = 1;
+    
+    // disable the reset button
+    var resButton = document.getElementById('reset');
+    resButton.disabled = true;
+    resButton.style.opacity = 0.5;
+}
