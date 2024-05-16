@@ -69,6 +69,15 @@ nav {
     font-size: larger;
 }
 
+/* colors for various html tags */
+.density-text {
+    color: "#7a1013";
+}
+
+.sir-line {
+    color: "blue";
+}
+
 /* reset button is greyed out at start as it is initialized as diabled */
 #reset {
     opacity: 0.5;

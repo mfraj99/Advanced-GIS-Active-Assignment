@@ -32,7 +32,7 @@ var backdropHazeLayers = [
         'source': 'expanded-outline',
         'layout': {},
         'paint': {
-            'fill-opacity': 0.5,
+            'fill-opacity': 0,
             'fill-color': '#4d4949',
         },
 
@@ -69,7 +69,7 @@ var contentLayer = [
         'layout': {},
         'paint': {
             'line-width': 7,
-            'line-color': 'orange',
+            'line-color': 'green',
         }
     },
 
@@ -85,6 +85,32 @@ var contentLayer = [
         }
     }
 
+]
+
+// arrays for text to change the state of the html sidebars
+var headerText = [
+    "Staten Island Railway has a lot of potential.",
+    "A lot of focus is placed on expanding service first.",
+    "But these solutions often overlook the existing railway.",
+    "A new right of way should be scouted out."
+]
+
+var p1Text = [
+    "The Staten Island Railway is 21 stops from Tottenville in the South to the St. George Ferry Terminal in the North. It is a very quirky system with only two stations, St. George and Tompkinsville having fare control. While the SIR is underused now, with further study and planning its role could beaugmented.",
+    "Traditionally planners have approached the issue of expanding transit on Staten Island by looking at the North Shore. This area has the densest underserved population as well as abandoned transit right of way.",
+    "The focus on the North Shore has led to a strong proposal to turn the old right of way into a <span style='color: green'> bus rapid transit</span> line. But this transformation risks blocking expansion of the Railway due to tearing up the old railbed and building paved roads.",
+    "Given the Outerbridge Crossing is currently under study for replacement. A <span style='color: fuchsia'>new right of way</span> could be built over the bridge from a spur just South of Annadale station. This new spur could be a boon to both revenue service and easy operational burdens for the railway."
+]
+
+var p2Text = [
+    "Click on the SIR bullets <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/NYCS-bull-trans-SIR-Std.svg/1024px-NYCS-bull-trans-SIR-Std.svg.png' width='20px' length='20px'> to view the station names. The <span style='color: blue'>blue</span> line is the current SIR right of way.",
+    "Click on the census blocks to view their population and population density in meters squared. <span style='color: red'>Darker red</span> indicates higher density. Click on the SIR bullets <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/NYCS-bull-trans-SIR-Std.svg/1024px-NYCS-bull-trans-SIR-Std.svg.png' width='20px' length='20px'> to view the station names. The <span style='color: blue'>blue</span> line is the current SIR right of way."
+
+]
+
+var p3Text = [
+    "Click the 'Continue' button below to view more.",
+    "Click the 'Back to Start' button to reset from the top."
 ]
 
 // Based on Chris Whong's pizza map example
@@ -112,6 +138,9 @@ map.on('load', () => {
         type: 'geojson',
         data: sicensusblocks
     });
+
+    // expanded haze layer is loaded and present with zero opacity for later animation
+    map.addLayer(backdropHazeLayers[1]);
 
     // used chatgpt and discussed with Luke Buttenwieser for how feature clicking can be achieved
 
@@ -224,6 +253,13 @@ stations.forEach(function (stationRecord) {
 // pressing the button to advance the story
 var currentLayerIndex = 0;
 
+// wrappers for changing htmls
+var header = document.getElementById('header');
+var p1 = document.getElementById('p1');
+var p2 = document.getElementById('p2');
+var p3 = document.getElementById('p3');
+
+// function for the continue button to chage the map and etxt state
 function toggleLayer() {
     // incrementing the layer counting, there are 3 layers to the story total
     if (currentLayerIndex < 4) {
@@ -233,16 +269,29 @@ function toggleLayer() {
     // layer one draws the populaton density map alongside the sir routes and stations
     if (currentLayerIndex === 1) {
         map.addLayer(contentLayer[0]);
+        header.innerHTML = headerText[1];
+        p1.innerHTML = p1Text[1];
+        p2.innerHTML = p2Text[1];
     }
     // layer two shows the proposed staten island brt
     else if (currentLayerIndex === 2) {
-        map.addLayer(contentLayer[1])
+        map.addLayer(contentLayer[1]);
+        header.innerHTML = headerText[2];
+        p1.innerHTML = p1Text[2];
     }
     // layer three shows my proposed outerbridge spur
     else if (currentLayerIndex === 3) {
-        map.addLayer(contentLayer[2])
-        map.addLayer(backdropHazeLayers[1])
-        map.removeLayer(backdropHazeLayers[0].id)
+        map.addLayer(contentLayer[2]);
+        header.innerHTML = headerText[3];
+        p1.innerHTML = p1Text[3];
+        p3.innerHTML = p3Text[1];
+
+        // move map slightly to center the new line
+        shiftMap(2);
+
+        // opacity transition/animation between haze layers
+        map.setPaintProperty('island-haze', 'fill-opacity', 0);
+        map.setPaintProperty('expanded-haze', 'fill-opacity', 0.5);
 
         // disable the continue button once story reaches its conclusion
         var mainButton = document.getElementById('main-toggle');
@@ -257,9 +306,15 @@ function toggleLayer() {
 
 }
 
-// set the map back to the starting state
+// set the map back to the starting state via the reset button
 function resetMap() {
     currentLayerIndex = 0;
+
+    // reset the text
+    header.innerHTML = headerText[0];
+    p1.innerHTML = p1Text[0];
+    p2.innerHTML = p2Text[0];
+    p3.innerHTML = p3Text[0];
 
     // reset data layers
     map.removeLayer(contentLayer[0].id);
@@ -267,8 +322,11 @@ function resetMap() {
     map.removeLayer(contentLayer[2].id);
 
     //reset haze layers
-    map.removeLayer(backdropHazeLayers[1].id)
-    map.addLayer(backdropHazeLayers[0])
+    map.setPaintProperty('island-haze', 'fill-opacity', 0.5);
+    map.setPaintProperty('expanded-haze', 'fill-opacity', 0);
+
+    // shift map back to start
+    shiftMap(1);
 
     // enable the continue button once story reaches its conclusion
     var mainButton = document.getElementById('main-toggle');
@@ -279,4 +337,30 @@ function resetMap() {
     var resButton = document.getElementById('reset');
     resButton.disabled = true;
     resButton.style.opacity = 0.5;
+}
+
+// Function to animate shifting the map slightly to a direction as passed
+function shiftMap(direction) {
+    // Get the current center coordinate
+    var currentCenter = map.getCenter();
+
+    if (direction === 1) {
+        // Calculate the new center coordinate shifted slightly to the right
+        var newCenter = [
+            currentCenter.lng + 0.025, // Shift right by 0.01 degrees
+            currentCenter.lat
+        ];
+    }
+    if (direction === 2) {
+        var newCenter = [
+            currentCenter.lng - 0.025, // Shift right by 0.01 degrees
+            currentCenter.lat
+        ];
+    }
+    // Animate the map to the new center coordinate with easing
+    map.easeTo({
+        center: newCenter,
+        duration: 1000, // Animation duration in milliseconds
+        easing: t => t // Linear easing
+    });
 }

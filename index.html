@@ -18,7 +18,7 @@ https://github.com/chriswhong/responsive-web-map-layout/tree/main -->
     <div id="main-container">
         <nav>
             <!-- title bar at top -->
-            <div class="title">An Idea to Improve Operations on the Staten Island Railway</div>
+            <div class="title">An Idea for a new Right of Way on the Staten Island Railway</div>
             <!-- link to the source code in the top right -->
             <div class="nav-links">
                 <a class="nav-link" href="https://github.com/mfraj99/Advanced-GIS-Assignment3" target="_blank"
@@ -30,24 +30,16 @@ https://github.com/chriswhong/responsive-web-map-layout/tree/main -->
         <!-- large sidebar for text description and buttons -->
         <div id="content-container">
             <div id="sidebar">
-                <h3>Click on the icons along the blue line to see the station name. Click anywhere on the map to close the popup.</h3>
-                <p>Just like Staten Island this webpage holds a lot of potential.</p>
-                <p>The Staten Island Railway is 21 stops from Tottenville in the South to the St. George Ferry Terminal
+                <h3 id="header">Staten Island Railway has a lot of potential.</h3>
+                <p id="p1">The Staten Island Railway is 21 stops from Tottenville in the South to the St. George Ferry Terminal
                     in the North. It is a very quirky system with only two stations, St. George and Tompkinsville having
                     fare control. While the SIR is underused now, with further study and planning its role could be
                     augmented.</p>
-                <p>Six of SIR's station are currently ADA compliant. Some of the Island's densest neighborhoods in the
-                    Northwest continue to be underserved by public transit.</p>
-                <p>Since assignment 3 a newpopulaton densit map has been added in red along with the railway right of
-                    way, icons for stations, a favicon and a hazy outline to focus user attention.</p>
-                <p>This website will continue to be updated with new featured including:</p>
-                <p>-A map legend</p>
-                <p>-Improved visuals for the accessibility of stations.</p>
-                <p>-Additional maps to tell a richer story that can be gone through with buttons</p>
-                <p>-Being able to click on the census blocks to see more information</p>
-                <p>-Deactivated historic train routes and possibly bus routes (maybe with an image slider for before and
-                    after)</p>
-                
+                <p id="p2">Click on the SIR bullets <img
+                        src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/NYCS-bull-trans-SIR-Std.svg/1024px-NYCS-bull-trans-SIR-Std.svg.png'
+                        width='20px' length='20px'> to view the station names. The <span style='color: blue'>blue</span> line is the current SIR right of way.</p>
+                <p id="p3">Click the 'Continue' button below to view more.</p>
+
                 <!-- buttons for advancing the story and restarting once done, reset is diabled at start -->
                 <button id="reset" onclick="resetMap()" disabled="disabled">Back to the Start</button>
                 <button id="main-toggle" onclick="toggleLayer()">Continue -></button>
