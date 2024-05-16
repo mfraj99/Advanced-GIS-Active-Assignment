@@ -1,3 +1,5 @@
+// cnesus blocks of staten island with demographic data
+
 var sicensusblocks = {
     "type": "FeatureCollection",
     "name": "sir-bloacks-density",
